@@ -52,8 +52,6 @@ export default class TutorialsList extends Component {
         this.setState({
           id: response.data.id,
           title: response.data.title,
-      
-
           submitted: true
         });
         this.refreshList();
@@ -78,6 +76,8 @@ export default class TutorialsList extends Component {
       .then(response => {
         console.log(response.data);
         this.props.history.push('/tutorials');
+//The history. push() function belongs to react-router-dom and used to move from the current page to another one. 
+
         this.refreshList();
       })
       .catch(e => {
@@ -124,17 +124,7 @@ export default class TutorialsList extends Component {
 
 
 
-  deleteTutorial() {    
-    TutorialDataService.delete(this.state.currentTutorial.id)
-      .then(response => {
-        console.log(response.data);
-        this.props.history.push('/tutorials');
-        this.refreshList();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
+ 
   render() {
     const { tutorials, currentTutorial, currentIndex } = this.state;
 
@@ -144,22 +134,22 @@ export default class TutorialsList extends Component {
         <div className="col-md-8">
           <div className="input-group mb-3">
           <div className="container">
-      <div className="submit-form">
-        {this.state.submitted ? (
+          <div className="submit-form">
+            {this.state.submitted ? (
           <div>
             
             <button onClick={()=>this.newTutorial()} className="btn btn-primary">+</button> Add a task
 
           </div>
-        ) : (
+          ) : (
           <div>
-                       <button onClick={()=>this.operation()} className="btn btn-primary">+</button> Add a task
+            <button onClick={()=>this.operation()} className="btn btn-primary">+</button> Add a task
 
                        <br/>
                        <br/>
-{this.state.showMe?  
-            <div className="form-group">
-              <input
+               {this.state.showMe?  
+                <div className="form-group">
+                <input
                 type="text"
                 className="form-control"
                 id="title"
@@ -167,24 +157,21 @@ export default class TutorialsList extends Component {
                 value={this.state.title}
                 onChange={this.onChangeTitle}
                 name="title"
-              />
+               />
 
               <br/>
-              <button onClick={this.saveTutorial} className="btn btn-success">
-              Submit
-            </button>
-            </div> 
-            :null}
+                <button onClick={this.saveTutorial} className="btn btn-success">
+                  Submit
+                </button>
+              </div> 
+                 :null}
 
 
           
           </div>
         )}
-      </div>
-      </div>
-
-
-        
+            </div>
+           </div>
           </div>
         </div>
         <div className="col-md-6">
@@ -198,7 +185,7 @@ export default class TutorialsList extends Component {
 
                  <input type="radio" className="strikethrough" value="1" onClick={() => this.setActiveTutorial(tutorial, index)}
                   key={index} />
-                   {tutorial.title}
+                  <span>{tutorial.title}</span> 
                <DeleteIcon   onClick={this.deleteTutorial}/>
                 </li>
               ))}

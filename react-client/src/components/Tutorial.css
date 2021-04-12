@@ -1,7 +1,7 @@
-ul .strikethrough:checked + span{
+.list .strikethrough:checked + span{
     text-decoration:line-through
   }
-
+ 
   ul {
     list-style-type: none;
   }
