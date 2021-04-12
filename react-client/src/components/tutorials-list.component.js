@@ -103,8 +103,8 @@ export default class TutorialsList extends Component {
     });
   }
 
-  deleteTutorial() {
-    TutorialDataService.delete(this.state.currentTutorial.id)
+  deleteTutorial(tutorial, index)  {
+    TutorialDataService.delete(tutorial.id)
       .then(response => {
         console.log(response.data);
         this.props.history.push('/tutorials');
@@ -248,7 +248,8 @@ export default class TutorialsList extends Component {
                     : <span>
                       {tutorial.title}</span>
                   }
-                  <DeleteIcon onClick={this.deleteTutorial} />
+                  
+                  <DeleteIcon onClick={() => this.deleteTutorial(tutorial, index)} />
                 </li>
               ))}
           </ul>

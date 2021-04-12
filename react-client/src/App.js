@@ -13,14 +13,7 @@ class App extends Component {
           <Link to={"/tutorials"} className="navbar-brand">
             Todotask
           </Link>
-          <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/tutorials"} className="nav-link">
-                Add items
-              </Link>
-            </li>
-          
-          </div>
+         
         </nav>
 
         <div className="container mt-3">
