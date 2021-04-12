@@ -23,8 +23,9 @@ export default class TutorialsList extends Component {
       currentIndex: -1,
       id: "",
       title: "",
-      showMe:false
-  
+      isTaskCompleted: null,
+      showMe: false
+
     };
   }
 
@@ -39,19 +40,20 @@ export default class TutorialsList extends Component {
     });
   }
 
-  
+
 
   saveTutorial() {
     var data = {
       title: this.state.title,
-      id:this.state.id
+      id: this.state.id
     };
-    
+
     TutorialDataService.create(data)
       .then(response => {
         this.setState({
           id: response.data.id,
           title: response.data.title,
+          isTaskCompleted: response.data.isTaskCompleted,
           submitted: true
         });
         this.refreshList();
@@ -60,8 +62,38 @@ export default class TutorialsList extends Component {
       .catch(e => {
         console.log(e);
       });
-      this.refreshList();
+    this.refreshList();
   }
+
+
+
+
+  updatePublished(status) {
+    var data = {
+      id: this.state.currentTutorial.id,
+      title: this.state.currentTutorial.title,
+      isTaskCompleted: this.currentTutorial.isTaskCompleted
+    };
+
+    TutorialDataService.update(this.state.currentTutorial.id, data)
+      .then(response => {
+        this.setState(prevState => ({
+          currentTutorial: {
+            ...prevState.currentTutorial,
+            published: status
+          }
+        }));
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+
+
+
+
 
   newTutorial() {
     this.setState({
@@ -71,12 +103,12 @@ export default class TutorialsList extends Component {
     });
   }
 
-  deleteTutorial() {    
+  deleteTutorial() {
     TutorialDataService.delete(this.state.currentTutorial.id)
       .then(response => {
         console.log(response.data);
         this.props.history.push('/tutorials');
-//The history. push() function belongs to react-router-dom and used to move from the current page to another one. 
+        //The history. push() function belongs to react-router-dom and used to move from the current page to another one. 
 
         this.refreshList();
       })
@@ -84,15 +116,15 @@ export default class TutorialsList extends Component {
         console.log(e);
         this.refreshList();
       });
-      this.refreshList();
+    this.refreshList();
   }
 
 
-  operation(){
+  operation() {
     this.setState({
-        showMe:!this.state.showMe
+      showMe: !this.state.showMe
     })
-}
+  }
 
   retrieveTutorials() {
     TutorialDataService.getAll()
@@ -120,58 +152,83 @@ export default class TutorialsList extends Component {
       currentTutorial: tutorial,
       currentIndex: index
     });
+
+
+    var data = {
+      id: tutorial.id,
+      title: tutorial.title,
+      isTaskCompleted: !tutorial.isTaskCompleted
+    };
+
+    TutorialDataService.update(tutorial.id, data)
+      .then(response => {
+        this.setState(prevState => ({
+          currentTutorial: {
+            ...prevState.currentTutorial,
+          }
+        }));
+        console.log(response.data);
+        this.refreshList();
+      })
+      .catch(e => {
+        console.log(e);
+        this.refreshList();
+      });
+    this.refreshList();
   }
 
 
+  demo() {
+    alert("dfdsf")
+  }
 
- 
   render() {
     const { tutorials, currentTutorial, currentIndex } = this.state;
 
     return (
-      
+
       <div className="list row">
         <div className="col-md-8">
           <div className="input-group mb-3">
-          <div className="container">
-          <div className="submit-form">
-            {this.state.submitted ? (
-          <div>
-            
-            <button onClick={()=>this.newTutorial()} className="btn btn-primary">+</button> Add a task
+            <div className="container">
+              <div className="submit-form">
+                {this.state.submitted ? (
+                  <div>
 
-          </div>
-          ) : (
-          <div>
-            <button onClick={()=>this.operation()} className="btn btn-primary">+</button> Add a task
+                    <button onClick={() => this.newTutorial()} className="btn btn-primary">+</button> Add a task
 
-                       <br/>
-                       <br/>
-               {this.state.showMe?  
-                <div className="form-group">
-                <input
-                type="text"
-                className="form-control"
-                id="title"
-                required 
-                value={this.state.title}
-                onChange={this.onChangeTitle}
-                name="title"
-               />
+                  </div>
+                ) : (
+                  <div>
+                    <button onClick={() => this.operation()} className="btn btn-primary">+</button> Add a task
 
-              <br/>
-                <button onClick={this.saveTutorial} className="btn btn-success">
-                  Submit
+                    <br />
+                    <br />
+                    {this.state.showMe ?
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="title"
+                          required
+                          value={this.state.title}
+                          onChange={this.onChangeTitle}
+                          name="title"
+                        />
+
+                        <br />
+                        <button onClick={this.saveTutorial} className="btn btn-success">
+                          Submit
                 </button>
-              </div> 
-                 :null}
+                      </div>
+                      : null}
 
 
-          
-          </div>
-        )}
+
+                  </div>
+                )}
+              </div>
             </div>
-           </div>
           </div>
         </div>
         <div className="col-md-6">
@@ -180,20 +237,25 @@ export default class TutorialsList extends Component {
             {tutorials &&
               tutorials.map((tutorial, index) => (
                 <li>
-                        <br/>
-                  <br/>
+                  <br />
+                  <br />
 
-                 <input type="radio" className="strikethrough" value="1" onClick={() => this.setActiveTutorial(tutorial, index)}
-                  key={index} />
-                  <span>{tutorial.title}</span> 
-               <DeleteIcon   onClick={this.deleteTutorial}/>
+                  <input type="checkbox" className="strikethrough" value="0" defaultChecked={tutorial.isTaskCompleted} onClick={() => this.setActiveTutorial(tutorial, index)}
+                    key={index} />
+                  {tutorial.isTaskCompleted ?
+                    <span >
+                      {tutorial.title}</span>
+                    : <span>
+                      {tutorial.title}</span>
+                  }
+                  <DeleteIcon onClick={this.deleteTutorial} />
                 </li>
               ))}
           </ul>
 
-          
+
         </div>
-        
+
       </div>
     );
   }

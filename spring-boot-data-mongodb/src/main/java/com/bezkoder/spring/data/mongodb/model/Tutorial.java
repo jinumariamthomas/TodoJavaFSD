@@ -11,12 +11,15 @@ public class Tutorial {
 
   private String title;
   
+  private boolean isTaskCompleted;
+
   public Tutorial() {
 
   }
 
-  public Tutorial(String title) {
+  public Tutorial(String title, boolean isTaskCompleted) {
     this.title = title;
+    this.isTaskCompleted = isTaskCompleted;
     
   }
 
@@ -32,11 +35,20 @@ public class Tutorial {
     this.title = title;
   }
 
+
+  public boolean getisTaskCompleted() {
+    return isTaskCompleted;
+  }
+
+  public void setisTaskCompleted(boolean isTaskCompleted) {
+    this.isTaskCompleted = isTaskCompleted;
+  }
+
  
 
   @Override
   public String toString() {
-    return "Tutorial [id=" + id + ", title=" + title +  "]";
+    return "Tutorial [id=" + id + ", title=" + title +", isTaskCompleted="+ isTaskCompleted + "]";
     //return value in string format.
   }
 }
