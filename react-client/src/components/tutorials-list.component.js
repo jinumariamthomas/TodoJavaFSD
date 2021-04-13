@@ -154,10 +154,18 @@ export default class TutorialsList extends Component {
 
     return (
 
-      <div className="list row">
+      <div className="container-fluid">
 
-        <div className="container">
+        <div class="row">
+
+
+        <div class="col bg-white">
+
           <div className="submit-form">
+
+
+           
+
             {this.state.submitted ? (
               <div>
 
@@ -166,11 +174,13 @@ export default class TutorialsList extends Component {
             ) : (
               <div>
                 <button onClick={() => this.operation()} className="btn btn-primary">+</button> Add a task
-
+              
 
                 {this.state.showMe ?
                   <div className="form-group">
                     <br />
+
+
                     <input
                       type="text"
                       className="form-control"
@@ -194,7 +204,7 @@ export default class TutorialsList extends Component {
             )}
           </div>
         </div>
-
+        <div class="col bg-white">
 
         <div>
 
@@ -203,30 +213,46 @@ export default class TutorialsList extends Component {
               tutorials.map((tutorial, index) => (
                 <li>
                   <br />
-
-                  <input type="checkbox" checked={tutorial.isTaskCompleted} onClick={() => this.updateTask(tutorial, index)}
-                    key={index} />
-                  {/* {" "} */}
+                  <div class="row">
+                    <div class="col-6 col-md-4"><input type="checkbox" checked={tutorial.isTaskCompleted} onClick={() => this.updateTask(tutorial, index)}
+                      key={index} />         {/* <input type="checkbox" checked={tutorial.isTaskCompleted} onClick={() => this.updateTask(tutorial, index)}
+                    key={index} /> */}
+                      {/* {" "} */}
                   &nbsp;
                   {
-                    tutorial.isTaskCompleted ?
-                      <span >
-                        <del>
-                          {tutorial.title}
-                        </del>
-                      </span>
-                      : <span>
-                        {tutorial.title}
-                      </span>
-                  }
+                        tutorial.isTaskCompleted ?
+                          <span >
+                            <del>
+                              {tutorial.title}
+                            </del>
+                          </span>
+                          : <span>
+                            {tutorial.title}
+                          </span>
+                      }
+                    </div>
+                    <div class="col-6 col-md-4"><DeleteIcon onClick={() => this.deleteTutorial(tutorial, index)} /></div>
+                  </div>
 
-                  <DeleteIcon onClick={() => this.deleteTutorial(tutorial, index)} />
+
+
                 </li>
               ))}
           </ul>
+
+          </div>
+
+
+
+
+
+
+
+
+
         </div>
 
-
+        </div>
 
       </div>
 
