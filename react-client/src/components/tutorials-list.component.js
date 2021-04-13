@@ -8,7 +8,7 @@ export default class TutorialsList extends Component {
     super(props);
     this.retrieveTutorials = this.retrieveTutorials.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
+    this.updateTask = this.updateTask.bind(this);
     this.deleteTutorial = this.deleteTutorial.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.saveTutorial = this.saveTutorial.bind(this);
@@ -66,35 +66,6 @@ export default class TutorialsList extends Component {
   }
 
 
-
-
-  updatePublished(status) {
-    var data = {
-      id: this.state.currentTutorial.id,
-      title: this.state.currentTutorial.title,
-      isTaskCompleted: this.currentTutorial.isTaskCompleted
-    };
-
-    TutorialDataService.update(this.state.currentTutorial.id, data)
-      .then(response => {
-        this.setState(prevState => ({
-          currentTutorial: {
-            ...prevState.currentTutorial,
-            published: status
-          }
-        }));
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-
-
-
-
-
   newTutorial() {
     this.setState({
       id: null,
@@ -103,7 +74,7 @@ export default class TutorialsList extends Component {
     });
   }
 
-  deleteTutorial(tutorial, index)  {
+  deleteTutorial(tutorial, index) {
     TutorialDataService.delete(tutorial.id)
       .then(response => {
         console.log(response.data);
@@ -147,7 +118,7 @@ export default class TutorialsList extends Component {
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  updateTask(tutorial, index) {
     this.setState({
       currentTutorial: tutorial,
       currentIndex: index
@@ -178,86 +149,92 @@ export default class TutorialsList extends Component {
   }
 
 
-  demo() {
-    alert("dfdsf")
-  }
-
   render() {
     const { tutorials, currentTutorial, currentIndex } = this.state;
 
     return (
 
       <div className="list row">
-        <div className="col-md-8">
-          <div className="input-group mb-3">
-            <div className="container">
-              <div className="submit-form">
-                {this.state.submitted ? (
-                  <div>
 
-                    <button onClick={() => this.newTutorial()} className="btn btn-primary">+</button> Add a task
+        <div className="container">
+          <div className="submit-form">
+            {this.state.submitted ? (
+              <div>
 
-                  </div>
-                ) : (
-                  <div>
-                    <button onClick={() => this.operation()} className="btn btn-primary">+</button> Add a task
-
-                    <br />
-                    <br />
-                    {this.state.showMe ?
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="title"
-                          required
-                          value={this.state.title}
-                          onChange={this.onChangeTitle}
-                          name="title"
-                        />
-
-                        <br />
-                        <button onClick={this.saveTutorial} className="btn btn-success">
-                          Submit
-                </button>
-                      </div>
-                      : null}
-
-
-
-                  </div>
-                )}
+                <button onClick={() => this.newTutorial()} className="btn btn-primary">+</button> Add a task
               </div>
-            </div>
+            ) : (
+              <div>
+                <button onClick={() => this.operation()} className="btn btn-primary">+</button> Add a task
+
+
+                {this.state.showMe ?
+                  <div className="form-group">
+                    <br />
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="title"
+                      required
+                      value={this.state.title}
+                      onChange={this.onChangeTitle}
+                      name="title"
+                    />
+
+                    <br />
+                    <button onClick={this.saveTutorial} className="btn btn-success">
+                      Submit
+                </button>
+                  </div>
+                  : null}
+
+
+
+              </div>
+            )}
           </div>
         </div>
-        <div className="col-md-6">
+
+
+        <div>
 
           <ul className="list-group">
             {tutorials &&
               tutorials.map((tutorial, index) => (
                 <li>
                   <br />
-                  <br />
 
-                  <input type="checkbox" className="strikethrough" value="0" defaultChecked={tutorial.isTaskCompleted} onClick={() => this.setActiveTutorial(tutorial, index)}
+                  <input type="checkbox" checked={tutorial.isTaskCompleted} onClick={() => this.updateTask(tutorial, index)}
                     key={index} />
-                  {tutorial.isTaskCompleted ?
-                    <span >
-                      {tutorial.title}</span>
-                    : <span>
-                      {tutorial.title}</span>
+                  {/* {" "} */}
+                  &nbsp;
+                  {
+                    tutorial.isTaskCompleted ?
+                      <span >
+                        <del>
+                          {tutorial.title}
+                        </del>
+                      </span>
+                      : <span>
+                        {tutorial.title}
+                      </span>
                   }
-                  
+
                   <DeleteIcon onClick={() => this.deleteTutorial(tutorial, index)} />
                 </li>
               ))}
           </ul>
-
-
         </div>
 
+
+
       </div>
+
+
+
+
+
+
     );
   }
 }
